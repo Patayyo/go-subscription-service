@@ -1,0 +1,27 @@
+# build/Dockerfile
+
+# Стадия сборки
+FROM golang:alpine AS builder
+
+WORKDIR /app
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . . 
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o app ./cmd/main.go
+
+# Финальный образ
+FROM alpine:latest
+
+WORKDIR /root/
+
+COPY --from=builder /app/app .
+COPY .env .env
+
+COPY docs/ ./docs/
+
+EXPOSE 8080
+
+CMD ["./app"]

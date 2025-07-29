@@ -1,0 +1,32 @@
+# ide
+.vscode/
+.ide/
+
+# os
+.DS_Store
+
+# logs
+*.log
+
+# Build artifacts
+/app
+*.exe
+*.out
+
+# golang
+bin/
+vendor/
+*.test
+*.tmp
+*.swp
+*.swo
+*.bak
+
+# swagger
+docs/docs.go
+
+# .env
+.env
+
+# Docker volumes
+db-data/

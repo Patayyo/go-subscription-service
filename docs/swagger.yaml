@@ -1,0 +1,236 @@
+basePath: /
+definitions:
+  dto.SubscriptionRequest:
+    properties:
+      end_date:
+        type: string
+      price:
+        type: integer
+      service_name:
+        type: string
+      start_date:
+        type: string
+      user_id:
+        type: string
+    type: object
+  model.Subscription:
+    properties:
+      endDate:
+        type: string
+      id:
+        type: string
+      price:
+        type: integer
+      serviceName:
+        type: string
+      startDate:
+        type: string
+      userID:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: REST API сервис для управления онлайн-подписками пользователей
+  title: Subscriptions Service API
+  version: "1.0"
+paths:
+  /subscription:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает список всех подписок
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Subscription'
+            type: array
+        "500":
+          description: Ошибка сервера
+          schema:
+            type: string
+      summary: Получить все подписки
+      tags:
+      - subscription
+    post:
+      consumes:
+      - application/json
+      description: Создать новую подписку
+      parameters:
+      - description: Данные для создания подписки
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SubscriptionRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Subscription'
+        "400":
+          description: Неверные данные
+          schema:
+            type: string
+        "500":
+          description: Ошибка сервера
+          schema:
+            type: string
+      summary: Создать подписку
+      tags:
+      - subscription
+  /subscription/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаляет подписку по ID
+      parameters:
+      - description: ID подписки
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Неверный ID
+          schema:
+            type: string
+        "404":
+          description: Подписка не найдена
+          schema:
+            type: string
+        "500":
+          description: Ошибка сервера
+          schema:
+            type: string
+      summary: Удалить подписку
+      tags:
+      - subscription
+    get:
+      consumes:
+      - application/json
+      description: Возвращает подписку по ID
+      parameters:
+      - description: ID подписки
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Subscription'
+        "400":
+          description: Неверный ID
+          schema:
+            type: string
+        "404":
+          description: Подписка не найдена
+          schema:
+            type: string
+        "500":
+          description: Ошибка сервера
+          schema:
+            type: string
+      summary: Получить подписку по ID
+      tags:
+      - subscription
+    patch:
+      consumes:
+      - application/json
+      description: Обновляет существующую подписку
+      parameters:
+      - description: ID подписки
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Оновленные данные подписки
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SubscriptionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Subscription'
+        "400":
+          description: Неверный ID или тело запроса
+          schema:
+            type: string
+        "404":
+          description: Подписка не найдена
+          schema:
+            type: string
+        "500":
+          description: Ошибка сервера
+          schema:
+            type: string
+      summary: Обновить подписку
+      tags:
+      - subscription
+  /subscription/total_amount:
+    get:
+      consumes:
+      - application/json
+      description: Считает сумму подписок за период пользователя в заданном диапазоне
+      parameters:
+      - description: ID пользователя
+        in: query
+        name: user_id
+        required: true
+        type: string
+      - description: Дата начала периода (yyyy-mm-dd)
+        in: query
+        name: from
+        required: true
+        type: string
+      - description: Дата окончания периода (yyyy-mm-dd)
+        in: query
+        name: to
+        required: true
+        type: string
+      - description: Название сервиса (опционально)
+        in: query
+        name: service_name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: integer
+            type: object
+        "400":
+          description: Неверные параметры запроса
+          schema:
+            type: string
+        "500":
+          description: Ошибка сервера
+          schema:
+            type: string
+      summary: Получить сумму подписок за период
+      tags:
+      - subscription
+swagger: "2.0"
